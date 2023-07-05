@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>选择题库</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">选择题库</h1>
+        <form action="/quiz" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="file" class="form-label">题库文件（Excel 格式）</label>
+                <input class="form-control" type="file" id="file" name="file" required>
+            </div>
+            <div class="mb-3">
+                <label for="quizType">请选择题型:</label>
+                <select id="quizType" name="quizType" class="form-select">
+                    <option value="all">全部</option>
+                    <option value="单选题">单选题</option>
+                    <option value="多选题">多选题</option>
+                    <option value="判断题">判断题</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <p>出题方式：</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="order" id="order-sequential" value="sequential" checked>
+                    <label class="form-check-label" for="order-sequential">顺序出题</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="order" id="order-random" value="random">
+                    <label class="form-check-label" for="order-random">随机出题</label>
+                </div>
+            </div>
+            <div class="mb-3" id="start-number-container">
+                <label for="start-number" class="form-label">从序号多少题开始（顺序出题时有效）</label>
+                <input class="form-control" type="number" id="start-number" name="start-number" min="1" value="1">
+            </div>
+            <button type="submit" class="btn btn-primary">开始测试</button>
+        </form>
+    </div>
+    <script>
+        document.querySelector('input[name="order"]').addEventListener('change', (event) => {
+            const startNumberContainer = document.getElementById('start-number-container');
+            if (event.target.value === 'random') {
+                startNumberContainer.classList.add('d-none');
+            } else {
+                startNumberContainer.classList.remove('d-none');
+            }
+        });
+    </script>
+</body>
+</html>

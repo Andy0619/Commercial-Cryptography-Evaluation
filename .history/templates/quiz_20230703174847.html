@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>题库测试</title>
+    
+    
+    <!--
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>-->
+    <!-- Add Bootstrap CSS -->
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl5v7y63AW5jx3VTR3sxw6ovB2zRt+3c8I+7i5g2kU" crossorigin="anonymous">-->
+
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">题库测试</h1>
+        <form id="quiz-form">
+            {% for question in questions %}
+            <div class="card mb-3">
+                <div class="card-header">
+                    <p><strong>{{ question["题目类型"] }}-{{ question["序号"] }}. {{ question["题目"] }}</strong></p>
+                </div>
+                <div class="card-body">
+                    {% if question['题目类型'] == '判断' %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answer-{{ question['序号'] }}[]" value="A">
+                        <label class="form-check-label">{{ question['选项A'] }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answer-{{ question['序号'] }}[]" value="B">
+                        <label class="form-check-label">{{ question['选项B'] }}</label>
+                    </div>
+
+
+                    {% elif question['题目类型'] == '单选' %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answer-{{ question['序号'] }}[]" value="A">
+                        <label class="form-check-label">{{ question['选项A'] }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answer-{{ question['序号'] }}[]" value="B">
+                        <label class="form-check-label">{{ question['选项B'] }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answer-{{ question['序号'] }}[]" value="C">
+                        <label class="form-check-label">{{ question['选项C'] }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answer-{{ question['序号'] }}[]" value="D">
+                        <label class="form-check-label">{{ question['选项D'] }}</label>
+                    </div>
+                    {% elif question['题目类型'] == '多选' %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="answer-{{ question['序号'] }}[]" value="A">
+                        <label class="form-check-label">{{ question['选项A'] }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="answer-{{ question['序号'] }}[]" value="B">
+                        <label class="form-check-label">{{ question['选项B'] }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="answer-{{ question['序号'] }}[]" value="C">
+                        <label class="form-check-label">{{ question['选项C'] }}</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="answer-{{ question['序号'] }}[]" value="D">
+                        <label class="form-check-label">{{ question['选项D'] }}</label>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-primary submit-answer" data-question-number="{{ question['序号'] }}" data-correct-answer="{{ question['正确答案']|join(',') }}">提交</button>
+                    <span class="result-{{ question['序号'] }}"></span>
+                </div>
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+    <script>
+        document.querySelectorAll(".submit-answer").forEach((button) => {
+            button.addEventListener("click", (event) => {
+                const questionNumber = event.target.getAttribute("data-question-number");
+                const correctAnswer = event.target.getAttribute("data-correct-answer").split(",");
+                console.log("correctAnswer",correctAnswer);
+                const userAnswer = [];
+                const answerInputs = document.getElementsByName("answer-" + questionNumber + "[]");
+                for (let i = 0; i < answerInputs.length; i++) {
+                    if (answerInputs[i].checked) {
+                        userAnswer.push(answerInputs[i].value);
+                        console.log("userAnswer",userAnswer);
+                    }
+                }
+
+                const resultSpan = document.querySelector(".result-" + questionNumber);
+                if (JSON.stringify(userAnswer) == JSON.stringify(correctAnswer)) {
+                    resultSpan.textContent = "正确";
+                    resultSpan.style.color = "green";
+                } else {
+                    resultSpan.textContent = "错误，正确答案是：" + correctAnswer.join(", ");
+                    resultSpan.style.color = "red";
+                }
+            });
+        });
+    </script>
+    <!-- Add Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+<!--其实我的题目还有判断题，判断题的话只有 A、B 两个选项，不知道会不会影响你代码这里的判断单选题和多选题，要是某个判断题没有被识别到，是不是会报错-->
